@@ -31,3 +31,15 @@ if __name__ == '__main__':
 
     # Only one Zulieferer
     print(df['Zulieferername'].unique())
+    print(df['Zuliefererid'].unique())
+
+    # Rename Latitude and Longitude
+    df.rename(columns={'Latitude': 'lat', 'Longitude': 'lon'}, inplace=True)
+
+    # Check rows where lat and lon are unique
+    df.drop_duplicates(subset=['lat', 'lon'], inplace=True)
+    print(df.shape)
+
+    # Drop rows where Kursstrasse is not unique
+    df.drop_duplicates(subset=['Kursstrasse'], inplace=True)
+    print(df.shape)

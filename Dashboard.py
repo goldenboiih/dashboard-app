@@ -60,13 +60,44 @@ st.pydeck_chart(pdk.Deck(
     ],
 ))
 
-# List number of courses per Veranstaltername
+# List number of courses per provider
 st.subheader('Number of courses per Veranstaltername')
 st.write(df['Veranstaltername'].value_counts())
 
-# List number of courses per Kursstadt
+# List number of courses per city
 st.subheader('Number of courses per Kursstadt')
 st.write(df['Kursstadt'].value_counts())
 
+# Create 3d map with number of courses per city
+st.subheader('3D Map')
+st.pydeck_chart(pdk.Deck(
+    map_style=None,
+    # map_style='mapbox://styles/mapbox/light-v9',
+    initial_view_state=pdk.ViewState(
+        latitude=48.783333,
+        longitude=9.183333,
+        zoom=7,
+        pitch=50,
+    ),
+    layers=[
+        pdk.Layer(
+            'ScatterplotLayer',
+            data=df[['lat', 'lon']],
+            get_position='[lon, lat]',
+            get_color='[200, 30, 0, 160]',
+            get_radius=200,
+        ),
+        pdk.Layer(
+            'HexagonLayer',
+            data=df[['lat', 'lon']],
+            get_position='[lon, lat]',
+            radius=4000,
+            elevation_scale=4,
+            elevation_range=[500, 20000],
+            pickable=True,
+            extruded=True,
+        ),
+    ],
+))
 
 # Run with streamlit run Dashboard.py
