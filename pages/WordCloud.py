@@ -4,10 +4,11 @@ from Dashboard import df
 
 df_copy = df.copy()
 
-# get words from beschreibung
+# 1. replace :, with " "
+# 2. detect all nouns -> remove those with "https://" 
+# 3. [["word1", "word2"], ["word2", "word3"]]
+# 4. Throw some TF-IDF on it
 
-# extract all nouns
-# count them
 """
     ## Testing WordCloud
     descriptions = [i for i in list(df["Kursbeschreibung"]) if i != ""]
