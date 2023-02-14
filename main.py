@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # with open('resources/Top20k.JSON', 'r', encoding='utf-8') as file:
 #     data = file.readlines()
@@ -43,5 +44,11 @@ if __name__ == '__main__':
     # Drop rows where Kursstrasse is not unique
     df.drop_duplicates(subset=['Kursstrasse'], inplace=True)
     # print(df.shape)
-    fig = df['Veranstaltername'].value_counts(normalize=True).head(10).plot.pie().figure
+    # fig = df['Veranstaltername'].value_counts(normalize=True).head(10).plot.pie().figure
+    course_count = df['Veranstaltername'].value_counts(normalize=True).head(10)
+    other_count = df['Veranstaltername'].value_counts(normalize=True)[10:].sum()
+    print(other_count)
+    fig, ax = plt.subplots(figsize=(15, 5))
+    ax.pie(course_count, labels=course_count.index, autopct='%1.1f%%')
+    ax.axis('equal')
     fig.show()

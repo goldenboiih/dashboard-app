@@ -1,10 +1,12 @@
 # Create a streamlit map app
-
+import matplotlib.pyplot as plt
 import streamlit as st
 import pandas as pd
 import numpy as np
 import pydeck as pdk
 import plotly.express as px
+import io
+from PIL import Image
 
 # Load data
 with open('resources/Top20k_valid.JSON', 'r', encoding='utf-8') as file:
@@ -45,8 +47,15 @@ with tab3:
     st.bar_chart(df['Anbieterstadt'].value_counts())
 
     # List number of courses per city
-    st.subheader('Number of courses per Kursstadt')
-    # st.pyplot(df['Kursstadt'].value_counts(normalize=True).head(10).plot.pie())
+    st.subheader('Top 10 Number of courses per Kursstadt')
+    course_count = df['Anbieterstadt'].value_counts(normalize=True).head(10)
+    fig, ax = plt.subplots(figsize=(10, 8))
+    ax.pie(course_count, labels=course_count.index, autopct='%1.1f%%')
+    ax.axis('equal')
+    img_buf = io.BytesIO()
+    plt.savefig(img_buf, format='png')
+    im = Image.open(img_buf)
+    st.image(im)
 
 with tab4:
     # Create a heatmap with the number of courses per city
@@ -75,9 +84,15 @@ with tab4:
 
 with tab5:
     # List number of courses per provider
-    st.subheader('Number of courses per Veranstaltername')
-    fig = df['Veranstaltername'].value_counts(normalize=True).head(10).plot(kind='pie').figure
-    st.pyplot(fig)
+    st.subheader('Top 10 Number of courses per Veranstaltername')
+    course_count = df['Veranstaltername'].value_counts(normalize=True).head(10)
+    fig, ax = plt.subplots(figsize=(15, 5))
+    ax.pie(course_count, labels=course_count.index, autopct='%1.1f%%')
+    ax.axis('equal')
+    img_buf = io.BytesIO()
+    plt.savefig(img_buf, format='png')
+    im = Image.open(img_buf)
+    st.image(im)
 
 with tab6:
     # Create 3d map with number of courses per city
