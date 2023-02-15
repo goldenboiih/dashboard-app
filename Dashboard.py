@@ -23,8 +23,8 @@ st.title('Kurse - Dashboard')
 df = df[(df['Bundesland'] == 'BAW') | (df['Bundesland'] == '')]
 
 # define tabs
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(['Start', 'City Map', 'Courses per city', 'Heatmap',
-                                             'Courses per provider', '3D Map'])
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Start', 'City Map', 'Courses per city', 'Heatmap',
+                                             'Courses per provider', '3D Map', 'Courses per Month'])
 
 with tab1:
     df
@@ -125,5 +125,21 @@ with tab6:
             ),
         ],
     ))
+
+with tab7:
+    # No. of courses per month
+    df['Monat'] = pd.to_datetime(df['Kursbeginn']).dt.month
+    # df['Monat'] = df['Monat'].astype(int)
+
+    months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli',
+              'August', 'September', 'Oktober', 'November', 'Dezember']
+
+    courses_per_month = df['Monat'].value_counts().sort_index()
+    courses_per_month.index = courses_per_month.index.map(lambda x: months[int(x-1)])
+    st.write(courses_per_month)
+    st.subheader('Number of courses per month')
+    # Not easy to retain the order with streamlit
+    # https://github.com/streamlit/streamlit/issues/385
+    st.bar_chart(courses_per_month)
 
 # Run with streamlit run Dashboard.py
