@@ -20,18 +20,18 @@ df.rename(columns={'Latitude': 'lat', 'Longitude': 'lon'}, inplace=True)
 st.title('Kurse - Dashboard')
 
 # Drop rows where Bundesland is not BAW or not empty
-df = df[(df['Bundesland'] == 'BAW') | (df['Bundesland'] == '')]
+# df = df[(df['Bundesland'] == 'BAW') | (df['Bundesland'] == '')]
 
 # define tabs
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Start', 'City Map', 'Courses per city', 'Heatmap',
-                                             'Courses per provider', '3D Map', 'Courses per Month'])
+tab1, tab2, tab3, tab4, tab5, tab7 = st.tabs(['Start', 'City Map', 'Courses per city', 'Heatmap',
+                                              'Courses per provider', 'Courses per Month'])
 
 with tab1:
-    df
-    # Display number of rows and columns
-    st.subheader('Number of rows and columns')
-    st.write("After deleting rows where Bundesland is not BAW or not empty")
-    st.write(df.shape)
+    # provide overview
+    st.write('Example data entries')
+    st.write(df.head(5))
+    st.write(f'Total number of courses: {df.shape[0]}')
+    st.write(f'Number of features per course: {df.shape[1]}')
 
 with tab2:
     # create an input for the user to select a city
@@ -93,38 +93,6 @@ with tab5:
     plt.savefig(img_buf, format='png')
     im = Image.open(img_buf)
     st.image(im)
-
-with tab6:
-    # Create 3d map with number of courses per city
-    st.subheader('3D Map')
-    st.pydeck_chart(pdk.Deck(
-        map_style=None,
-        initial_view_state=pdk.ViewState(
-            latitude=48.783333,
-            longitude=9.183333,
-            zoom=7,
-            pitch=50,
-        ),
-        layers=[
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=df[['lat', 'lon']],
-                get_position='[lon, lat]',
-                get_color='[200, 30, 0, 160]',
-                get_radius=200,
-            ),
-            pdk.Layer(
-                'HexagonLayer',
-                data=df[['lat', 'lon']],
-                get_position='[lon, lat]',
-                radius=4000,
-                elevation_scale=4,
-                elevation_range=[500, 20000],
-                pickable=True,
-                extruded=True,
-            ),
-        ],
-    ))
 
 with tab7:
     # No. of courses per month
